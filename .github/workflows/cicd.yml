@@ -1,7 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 name: Connect to an AWS role from a GitHub repository
 
-# Controls when the action will run. Invokes the workflow on push events but only for the main branch
 on:
   push:
     branches: [ main ]
@@ -9,26 +8,48 @@ on:
     branches: [ main ]
 
 env:
-  
-  AWS_REGION : ap-southeast-1 #Change to reflect your Region
+  AWS_REGION: ap-southeast-1  # Change to reflect your region
 
-# Permission can be added at job level or workflow level    
 permissions:
-      id-token: write   # This is required for requesting the JWT
-      contents: read    # This is required for actions/checkout
+  id-token: write    # Required for requesting the OIDC JWT
+  contents: read     # Required for actions/checkout
+
 jobs:
-  AssumeRoleAndCallIdentity:
+  AssumeRoleAndDeploy:
     runs-on: ubuntu-latest
+
     steps:
       - name: Git clone the repository
         uses: actions/checkout@v3
-      - name: configure aws credentials
+
+      - name: Configure AWS credentials (OIDC)
         uses: aws-actions/configure-aws-credentials@v1.7.0
         with:
-          role-to-assume: arn:aws:iam::542741497010:role/GitHubAction-AssumeRoleWithAction #change to reflect your IAM role’s ARN
+          role-to-assume: arn:aws:iam::542741497010:role/GitHubAction-AssumeRoleWithAction # Update with your IAM role ARN
           role-session-name: GitHub_to_AWS_via_FederatedOIDC
           aws-region: ${{ env.AWS_REGION }}
-      # Hello from AWS: WhoAmI
-      - name: Sts GetCallerIdentity
-        run: |
-          aws sts get-caller-identity
+
+      - name: WhoAmI (verify role assumption)
+        run: aws sts get-caller-identity
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.10.5  # Use your preferred version
+
+      - name: Terraform Init
+        run: terraform init
+        working-directory: ./terrafrom  # Change to your Terraform directory if needed
+
+      - name: Terraform Validate
+        run: terraform validate
+        working-directory: ./terrafrom
+
+      - name: Terraform Plan
+        run: terraform plan -out=tfplan
+        working-directory: ./terrafrom
+
+      - name: Terraform Apply (main branch only)
+        if: github.ref == 'refs/heads/main'
+        run: terraform apply -auto-approve tfplan
+        working-directory: ./terrafrom
