@@ -224,7 +224,7 @@ export NODE_TLS_REJECT_UNAUTHORIZED='0'
 echo "Running database initialization script..."
 export SECRETS_MANAGER_NAME=${secrets_manager_name}
 cd /opt/banking-app
-node init.js
+node init-db.js
 
 # Create systemd service for the backend application
 cat > /etc/systemd/system/${app_name}.service << SERVICE_CONFIG
