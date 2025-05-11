@@ -39,6 +39,7 @@ resource "aws_db_instance" "banking_db" {
   skip_final_snapshot    = true
   multi_az               = true
   
+  
   # Enable encryption with our CMK
   storage_encrypted = true
   kms_key_id        = aws_kms_key.banking_cmk.arn
