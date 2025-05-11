@@ -34,6 +34,11 @@ jobs:
         
 
       # --- Terraform Phase 1: Bootstrap Artifacts Bucket ---
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.10.5  # Use your preferred version
+          
       - name: Init Bootstrap Terraform
         run: terraform init
         working-directory: ./terraform/bootstrap
@@ -69,11 +74,6 @@ jobs:
         # --- Build Backend (Node.js) NOT DONE---
 
       # --- Terraform Phase 2: Main Application Infrastructure ---
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: 1.10.5  # Use your preferred version
-
       - name: Terraform Init
         run: terraform init
         working-directory: ./terraform/main # Change to your Terraform directory if needed
