@@ -83,7 +83,7 @@ jobs:
         working-directory: ./terraform/main
 
       - name: Terraform Plan
-        run: terraform plan -out=tfplan
+        run: terraform plan -out=tfplan -refresh=false -parallelism=10
         working-directory: ./terraform/main
 
       - name: Terraform Apply (main branch only)
