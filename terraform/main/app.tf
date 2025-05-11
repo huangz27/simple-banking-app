@@ -74,21 +74,59 @@ resource "aws_iam_instance_profile" "app_profile" {
 }
 
 
+# IAM policy for EC2 instances to access S3
+resource "aws_iam_policy" "s3_policy" {
+  name        = "${var.app_name}-s3-policy"
+  description = "Allow access to S3 for application files"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = [
+          "s3:GetObject",
+          "s3:PutObject",
+          "s3:ListBucket",
+          "s3:DeleteObject"
+        ]
+        Effect   = "Allow"
+        Resource = [
+          "arn:aws:s3:::${var.artifact_bucket}",
+          "arn:aws:s3:::${var.artifact_bucket}/*",
+        ]
+      },
+      {
+        Action = [
+          "kms:Decrypt",
+          "kms:GenerateDataKey"
+        ]
+        Effect   = "Allow"
+        Resource = aws_kms_key.banking_cmk.arn
+      }
+    ]
+  })
+}
+
+# Attach S3 policy to role
+resource "aws_iam_role_policy_attachment" "s3_policy_attachment" {
+  role       = aws_iam_role.app_role.name
+  policy_arn = aws_iam_policy.s3_policy.arn
+}
 
 #-------------------------------------------------------
 # EC2 INSTANCE CONFIGURATION
 #-------------------------------------------------------
 
 # Read user data script from file and render with variables
-# data "template_file" "user_data" {
-#  template = file("${path.module}/scripts/user-data.sh")
-#  
-#  vars = {
-#    app_name     = var.app_name
-#    aws_region   = var.aws_region
-#    s3_bucket_id = var.artifact_bucket
-#  }
-# }
+data "template_file" "user_data" {
+  template = file("${path.module}/scripts/user-data.sh")
+  
+  vars = {
+    app_name     = var.app_name
+    aws_region   = var.aws_region
+    s3_bucket_id = var.artifact_bucket
+  }
+}
 
 # Launch template for ASG
 resource "aws_launch_template" "app_launch_template" {

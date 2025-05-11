@@ -2,7 +2,15 @@ provider "aws" {
   region = var.aws_region
 }
 
+data "aws_s3_object" "frontend_zip" {
+  bucket = var.artifact_bucket
+  key    = "frontend.zip"
+}
 
+data "aws_s3_object" "backend_zip" {
+  bucket = var.artifact_bucket
+  key    = "backend.zip"
+}
 
 # Create VPC
 resource "aws_vpc" "banking_vpc" {

@@ -83,10 +83,11 @@ jobs:
         working-directory: ./terraform/main
 
       - name: Terraform Plan
-        run: terraform plan -out=tfplan -refresh=false -parallelism=10
-        working-directory: ./terraform/main
+        run: terraform plan -var="artifact_bucket=${{ steps.get_bucket.outputs.bucket_name }}"
+        working-directory: ./terraform
 
       - name: Terraform Apply (main branch only)
         if: github.ref == 'refs/heads/main'
-        run: terraform apply -auto-approve tfplan
-        working-directory: ./terraform/main
+        run: terraform apply -auto-approve -var="artifact_bucket=${{ steps.get_bucket.outputs.bucket_name }}"
+        working-directory: ./terraform
+
