@@ -38,7 +38,7 @@ resource "aws_db_instance" "banking_db" {
   vpc_security_group_ids = [aws_security_group.db_sg.id]
   skip_final_snapshot    = true
   multi_az               = true
-
+  
   
   # Enable encryption with our CMK
   storage_encrypted = true
@@ -50,7 +50,7 @@ resource "aws_db_instance" "banking_db" {
   maintenance_window      = "Mon:00:00-Mon:03:00"
   
   # Enable deletion protection in production
-  # deletion_protection = true
+  deletion_protection = true
 
   tags = {
     Name = "banking-db"

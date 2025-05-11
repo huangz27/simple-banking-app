@@ -4,9 +4,9 @@ resource "aws_kms_key" "banking_cmk" {
   deletion_window_in_days = 7
   enable_key_rotation     = true
 
-  # lifecycle {
-  #   prevent_destroy = true
-  # }
+  lifecycle {
+    prevent_destroy = true
+  }
   
   policy = jsonencode({
     Version = "2012-10-17",

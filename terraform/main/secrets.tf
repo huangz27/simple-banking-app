@@ -10,9 +10,9 @@ resource "aws_secretsmanager_secret" "db_credentials" {
   description = "Database credentials for ${var.app_name}"
   kms_key_id  = aws_kms_key.banking_cmk.arn
 
-  # lifecycle {
-  #  prevent_destroy = true
-  # }
+  lifecycle {
+    prevent_destroy = true
+  }
   
   tags = {
     Name = "${var.app_name}-db-credentials"
