@@ -25,7 +25,7 @@ async function initializeDatabase() {
       password: secretData.password,
       database: secretData.dbname,
       port: secretData.port || 5432,
-      ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
+      ssl: true
     });
     
     // Connect to database

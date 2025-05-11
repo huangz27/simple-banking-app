@@ -91,8 +91,10 @@ async function getDatabaseConfig() {
       user: secretData.username,
       password: secretData.password,
       database: secretData.dbname,
-      port: secretData.port || 5432
+      port: secretData.port || 5432,
+      ssl: true
     };
+    
   } catch (error) {
     console.error('Error retrieving database credentials:', error);
     throw error;

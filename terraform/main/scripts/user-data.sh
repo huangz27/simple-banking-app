@@ -218,6 +218,9 @@ fi
 # ====================================================================================
 echo "Setting up backend service..."
 
+
+export NODE_TLS_REJECT_UNAUTHORIZED='0'
+
 # Create systemd service for the backend application
 cat > /etc/systemd/system/${app_name}.service << SERVICE_CONFIG
 [Unit]
