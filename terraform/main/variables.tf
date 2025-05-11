@@ -97,5 +97,5 @@ variable "ami_owner" {
 variable "ami_name_pattern" {
   description = "Name pattern for the AMI to use for EC2 instances"
   type        = string
-  default     = "amzn2-ami-hvm-*-x86_64-gp2"
+  default     = "al2023-ami-*-kernel-6.1-x86_64"
 }

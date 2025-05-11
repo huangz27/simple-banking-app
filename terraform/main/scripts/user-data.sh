@@ -174,7 +174,7 @@ HTML_CONTENT
 if [ -f "/tmp/frontend.zip" ]; then
     echo "Extracting frontend assets..."
     unzip -o /tmp/frontend.zip -d /tmp/frontend
-    cp -r /tmp/frontend/* /var/www/html/
+    cp -r /tmp/frontend/build/* /var/www/html/
     rm -rf /tmp/frontend /tmp/frontend.zip
 fi
 

@@ -163,7 +163,6 @@ resource "aws_launch_template" "app_launch_template" {
 }
 
 
-
 # Auto Scaling Group
 resource "aws_autoscaling_group" "app_asg" {
   name                = "${var.app_name}-asg"
@@ -176,7 +175,7 @@ resource "aws_autoscaling_group" "app_asg" {
   
   launch_template {
     id      = aws_launch_template.app_launch_template.id
-    version = aws_launch_template.app_launch_template.latest_version
+    version = "$Latest"
 
   }
 
