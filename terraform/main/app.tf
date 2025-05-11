@@ -143,7 +143,7 @@ resource "aws_launch_template" "app_launch_template" {
     security_groups             = [aws_security_group.app_sg.id]
   }
 
-  # user_data = base64encode(data.template_file.user_data.rendered)
+  user_data = base64encode(data.template_file.user_data.rendered)
 
   tag_specifications {
     resource_type = "instance"
