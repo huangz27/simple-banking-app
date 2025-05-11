@@ -57,12 +57,6 @@ variable "db_username" {
   default     = "admin"
 }
 
-# Password is now managed by Secrets Manager
-# variable "db_password" {
-#   description = "Password for the database"
-#   type        = string
-#   default     = "YourStrongPasswordHere123!" # In production, use AWS Secrets Manager or similar
-# }
 
 variable "db_instance_class" {
   description = "Instance class for the RDS database"
