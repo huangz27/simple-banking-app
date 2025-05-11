@@ -124,7 +124,7 @@ data "template_file" "user_data" {
   vars = {
     app_name     = var.app_name
     aws_region   = var.aws_region
-    s3_bucket_id = aws_s3_bucket.app_bucket.id
+    s3_bucket_id = var.artifact_bucket
   }
 }
 
