@@ -12,5 +12,5 @@ variable "app_name" {
 
 variable "artifact_bucket_name" {
   type        = string
-  default     = "${var.app_name}-artifacts-123456"
+  default     = "banking-app-artifacts-123456"
 }
