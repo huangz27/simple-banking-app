@@ -68,7 +68,7 @@ resource "aws_cloudwatch_dashboard" "main" {
         height = 6
         properties = {
           metrics = [
-            ["AWS/ApplicationELB", "RequestCount", "LoadBalancer", aws_lb.app_lb.arn_suffix]
+            ["AWS/ApplicationELB", "RequestCount", "LoadBalancer", aws_lb.app_alb.arn_suffix]
           ]
           period = 300
           stat   = "Sum"
@@ -84,7 +84,7 @@ resource "aws_cloudwatch_dashboard" "main" {
         height = 6
         properties = {
           metrics = [
-            ["AWS/ApplicationELB", "TargetResponseTime", "LoadBalancer", aws_lb.app_lb.arn_suffix]
+            ["AWS/ApplicationELB", "TargetResponseTime", "LoadBalancer", aws_lb.app_alb.arn_suffix]
           ]
           period = 300
           stat   = "Average"
@@ -207,7 +207,7 @@ resource "aws_cloudwatch_metric_alarm" "alb_5xx_errors" {
   alarm_description   = "This metric monitors alb 5xx errors"
   alarm_actions       = [aws_sns_topic.alerts.arn]
   dimensions = {
-    LoadBalancer = aws_lb.app_lb.arn_suffix
+    LoadBalancer = aws_lb.app_alb.arn_suffix
   }
 }
 

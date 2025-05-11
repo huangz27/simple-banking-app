@@ -85,7 +85,6 @@ resource "aws_s3_bucket" "app_bucket" {
   tags = {
     Name        = "${var.app_name}-files"
     Application = var.app_name
-    Environment = var.environment
   }
 }
 
@@ -182,7 +181,6 @@ resource "aws_s3_object" "frontend_zip" {
   tags = {
     Name        = "${var.app_name}-frontend"
     Application = var.app_name
-    Environment = var.environment
   }
 }
 
@@ -262,7 +260,6 @@ resource "aws_launch_template" "app_launch_template" {
     tags = {
       Name        = "${var.app_name}-instance"
       Application = var.app_name
-      Environment = var.environment
     }
   }
   
@@ -300,11 +297,6 @@ resource "aws_autoscaling_group" "app_asg" {
     propagate_at_launch = true
   }
   
-  tag {
-    key                 = "Environment"
-    value               = var.environment
-    propagate_at_launch = true
-  }
   
   # Enable detailed monitoring
   enabled_metrics = [
