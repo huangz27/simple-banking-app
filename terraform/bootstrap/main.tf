@@ -2,32 +2,14 @@ provider "aws" {
   region = var.aws_region
 }
 
-# Use terraform state to track the bucket name
-resource "terraform_data" "bucket_name" {
-  input = "${var.artifact_bucket_name}"
+# Reference an existing S3 bucket by name
+data "aws_s3_bucket" "artifact_bucket" {
+  bucket = var.artifact_bucket_name
 }
-
-# S3 bucket for application files
-resource "aws_s3_bucket" "artifact_bucket" {
-  bucket        = terraform_data.bucket_name.output
-  force_destroy = true
-  
-  # This prevents Terraform from recreating the bucket if it already exists
-  lifecycle {
-    prevent_destroy = true
-    ignore_changes  = [bucket]
-  }
-  
-  tags = {
-    Name        = "${var.app_name}-files"
-    Application = var.app_name
-  }
-}
-
 
 # S3 bucket ownership controls
 resource "aws_s3_bucket_ownership_controls" "artifact_bucket_ownership" {
-  bucket = aws_s3_bucket.artifact_bucket.id
+  bucket = data.aws_s3_bucket.artifact_bucket.id
   rule {
     object_ownership = "BucketOwnerPreferred"
   }
@@ -36,13 +18,13 @@ resource "aws_s3_bucket_ownership_controls" "artifact_bucket_ownership" {
 # S3 bucket ACL
 resource "aws_s3_bucket_acl" "artifact_bucket_acl" {
   depends_on = [aws_s3_bucket_ownership_controls.artifact_bucket_ownership]
-  bucket     = aws_s3_bucket.artifact_bucket.id
+  bucket     = data.aws_s3_bucket.artifact_bucket.id
   acl        = "private"
 }
 
 # S3 bucket versioning
 resource "aws_s3_bucket_versioning" "artifact_bucket_versioning" {
-  bucket = aws_s3_bucket.artifact_bucket.id
+  bucket = data.aws_s3_bucket.artifact_bucket.id
   versioning_configuration {
     status = "Enabled"
   }
@@ -50,7 +32,7 @@ resource "aws_s3_bucket_versioning" "artifact_bucket_versioning" {
 
 # S3 bucket public access block
 resource "aws_s3_bucket_public_access_block" "artifact_bucket_public_access_block" {
-  bucket = aws_s3_bucket.artifact_bucket.id
+  bucket = data.aws_s3_bucket.artifact_bucket.id
 
   block_public_acls       = true
   block_public_policy     = true
@@ -59,5 +41,5 @@ resource "aws_s3_bucket_public_access_block" "artifact_bucket_public_access_bloc
 }
 
 output "artifact_bucket_name" {
-  value = aws_s3_bucket.artifact_bucket.bucket
+  value = data.aws_s3_bucket.artifact_bucket.bucket
 }
