@@ -27,13 +27,3 @@ output "secrets_manager_name" {
   description = "Name of the Secrets Manager secret containing database credentials"
   value       = aws_secretsmanager_secret.db_credentials.name
 }
-
-output "ami_id" {
-  description = "AMI ID used for EC2 instances"
-  value       = data.aws_ami.amazon_linux_2.id
-}
-
-output "ami_name" {
-  description = "AMI name used for EC2 instances"
-  value       = data.aws_ami.amazon_linux_2.name
-}

@@ -213,7 +213,8 @@ if [ -f "/tmp/backend.zip" ]; then
     
     # Install backend dependencies
     cd /opt/banking-app
-    npm ci --production
+    npm install
+    npm run start
 fi
 
 # ====================================================================================

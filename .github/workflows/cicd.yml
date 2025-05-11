@@ -71,7 +71,18 @@ jobs:
         run: aws s3 cp build.zip s3://${{ steps.get_bucket.outputs.bucket_name }}/frontend/build.zip
         working-directory: ./frontend
 
-        # --- Build Backend (Node.js) NOT DONE---
+        # --- Build Backend (Node.js) ---
+      - name: Install dependencies for backend
+        run: npm install
+        working-directory: ./backend 
+
+      - name: Zip backend
+        run: zip -r backend.zip .
+        working-directory: ./backend
+
+      - name: Upload backend.zip to S3
+        run: aws s3 cp backend.zip s3://${{ steps.get_bucket.outputs.bucket_name }}/backend/app.zip
+        working-directory: ./backend
 
       # --- Terraform Phase 2: Main Application Infrastructure ---
       - name: Terraform Init with backend config
