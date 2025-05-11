@@ -195,7 +195,7 @@ app.get('/api/status', (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Placeholder server listening on port ${port}`);
+  console.log(`Placeholder server listening on port 3000`);
 });
 JS_CONTENT
 
