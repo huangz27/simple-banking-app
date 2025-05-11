@@ -1,0 +1,31 @@
+{
+  "name": "banking-app",
+  "version": "1.1.0",
+  "description": "Simple Banking API",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "NODE_ENV=development nodemon server.js",
+    "test": "jest",
+    "build": "NODE_ENV=production npm ci --only=production",
+    "clean": "rimraf dist",
+    "start:prod": "NODE_ENV=production node server.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "@aws-sdk/client-secrets-manager": "^3.525.0",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "pg": "^8.11.3"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "nodemon": "^3.1.0",
+    "rimraf": "^5.0.10",
+    "supertest": "^6.3.4"
+  },
+  "author": "",
+  "license": "ISC"
+}
