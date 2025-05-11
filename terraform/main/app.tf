@@ -165,7 +165,7 @@ resource "aws_launch_template" "app_launch_template_default" {
   name = aws_launch_template.app_launch_template.name
   
   # Reference the new version and set it as default
-  default_version = app_launch_template.app_launch_template.latest_version
+  default_version = aws_launch_template.app_launch_template.latest_version
   
   lifecycle {
     ignore_changes = all
@@ -184,7 +184,8 @@ resource "aws_autoscaling_group" "app_asg" {
   
   launch_template {
     id      = aws_launch_template.app_launch_template.id
-    version = "$Latest"
+    version = aws_launch_template.app_launch_template.latest_version
+
   }
 
   tag {
