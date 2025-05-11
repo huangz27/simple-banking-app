@@ -160,6 +160,18 @@ resource "aws_launch_template" "app_launch_template" {
   }
 }
 
+# Set the new version as default
+resource "aws_launch_template" "app_launch_template_default" {
+  name = aws_launch_template.app_launch_template.name
+  
+  # Reference the new version and set it as default
+  default_version = aws_launch_template_version.app_launch_template_new.version_number
+  
+  lifecycle {
+    ignore_changes = all
+  }
+}
+
 # Auto Scaling Group
 resource "aws_autoscaling_group" "app_asg" {
   name                = "${var.app_name}-asg"
