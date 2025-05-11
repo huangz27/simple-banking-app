@@ -100,6 +100,6 @@ jobs:
       
       - name: Destroy on failure
         if: steps.apply.outcome == 'failure'
-        run: terraform destroy -auto-approve
+        run: terraform destroy -auto-approve -var="artifact_bucket=${{ steps.get_bucket.outputs.bucket_name }}"
         working-directory: ./terraform/main
 

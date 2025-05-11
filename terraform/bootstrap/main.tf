@@ -2,16 +2,28 @@ provider "aws" {
   region = var.aws_region
 }
 
+# Use terraform state to track the bucket name
+resource "terraform_data" "bucket_name" {
+  input = "${var.artifact_bucket_name}
+}
+
 # S3 bucket for application files
 resource "aws_s3_bucket" "artifact_bucket" {
-  bucket_prefix = "${var.app_name}-files-"
+  bucket        = terraform_data.bucket_name.output
   force_destroy = true
+  
+  # This prevents Terraform from recreating the bucket if it already exists
+  lifecycle {
+    prevent_destroy = true
+    ignore_changes  = [bucket]
+  }
   
   tags = {
     Name        = "${var.app_name}-files"
     Application = var.app_name
   }
 }
+
 
 # S3 bucket ownership controls
 resource "aws_s3_bucket_ownership_controls" "artifact_bucket_ownership" {
