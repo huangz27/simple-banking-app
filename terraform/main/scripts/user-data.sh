@@ -245,6 +245,7 @@ SyslogIdentifier=${app_name}
 Environment=NODE_ENV=production
 Environment=PORT=3000
 Environment=SECRETS_MANAGER_NAME=${secrets_manager_name}
+Environment=NODE_TLS_REJECT_UNAUTHORIZED='0'
 
 [Install]
 WantedBy=multi-user.target
