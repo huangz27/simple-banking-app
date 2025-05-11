@@ -165,7 +165,7 @@ resource "aws_launch_template" "app_launch_template_default" {
   name = aws_launch_template.app_launch_template.name
   
   # Reference the new version and set it as default
-  default_version = aws_launch_template_version.app_launch_template.version_number
+  default_version = app_launch_template.app_launch_template.latest_version
   
   lifecycle {
     ignore_changes = all
