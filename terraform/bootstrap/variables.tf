@@ -4,10 +4,6 @@ variable "aws_region" {
   default     = "ap-southeast-1"
 }
 
-variable "artifact_bucket" {
-  type = string
-}
-
 variable "app_name" {
   description = "Name of the banking application"
   type        = string
