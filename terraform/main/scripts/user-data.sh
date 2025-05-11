@@ -251,6 +251,7 @@ Environment=NODE_TLS_REJECT_UNAUTHORIZED='0'
 WantedBy=multi-user.target
 SERVICE_CONFIG
 
+
 # Set proper permissions
 echo "Setting permissions..."
 chown -R ec2-user:ec2-user /opt/banking-app
