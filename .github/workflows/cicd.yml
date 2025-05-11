@@ -63,7 +63,7 @@ jobs:
         working-directory: ./frontend
       
       - name: Upload frontend.zip to S3
-        r run: aws s3 cp frontend.zip s3://${{ steps.get_bucket.outputs.bucket_name }}/frontend.zip
+        run: aws s3 cp frontend.zip s3://${{ steps.get_bucket.outputs.bucket_name }}/frontend.zip
         working-directory: ./frontend
 
         # --- Build Backend (Node.js) NOT DONE---
