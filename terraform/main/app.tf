@@ -69,7 +69,7 @@ resource "aws_iam_role_policy_attachment" "ssm_policy_attachment" {
 
 # Instance profile
 resource "aws_iam_instance_profile" "app_profile" {
-  name = "${var.app_name}-profile"
+  name = "${var.app_name}-profile-${random_id.suffix.hex}"
   role = aws_iam_role.app_role.name
 }
 

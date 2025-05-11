@@ -12,6 +12,10 @@ data "aws_s3_object" "frontend_zip" {
 #  key    = "backend.zip"
 # }
 
+resource "random_id" "suffix" {
+  byte_length = 4
+}
+
 # Create VPC
 resource "aws_vpc" "banking_vpc" {
   cidr_block           = var.vpc_cidr
