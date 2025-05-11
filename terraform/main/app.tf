@@ -163,6 +163,7 @@ resource "aws_launch_template" "app_launch_template" {
 }
 
 
+
 # Auto Scaling Group
 resource "aws_autoscaling_group" "app_asg" {
   name                = "${var.app_name}-asg"
