@@ -87,7 +87,14 @@ jobs:
         working-directory: ./terraform/main
 
       - name: Terraform Apply (main branch only)
+        id: apply
         if: github.ref == 'refs/heads/main'
         run: terraform apply -auto-approve -var="artifact_bucket=${{ steps.get_bucket.outputs.bucket_name }}"
+        working-directory: ./terraform/main
+        continue-on-error: true
+      
+      - name: Destroy on failure
+        if: steps.apply.outcome == 'failure'
+        run: terraform destroy -auto-approve
         working-directory: ./terraform/main
 

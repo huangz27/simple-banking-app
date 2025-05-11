@@ -56,7 +56,7 @@ resource "aws_kms_key" "banking_cmk" {
 
 # KMS key alias for easier reference
 resource "aws_kms_alias" "banking_cmk_alias" {
-  name          = "alias/${var.app_name}-key"
+  name          = "alias/${var.app_name}-KMS-key"
   target_key_id = aws_kms_key.banking_cmk.key_id
 }
 
