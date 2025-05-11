@@ -218,8 +218,13 @@ fi
 # ====================================================================================
 echo "Setting up backend service..."
 
-
 export NODE_TLS_REJECT_UNAUTHORIZED='0'
+
+# Initiation script for the database
+echo "Running database initialization script..."
+Export SECRETS_MANAGER_NAME=${secrets_manager_name}
+cd /opt/banking-app
+node init.js
 
 # Create systemd service for the backend application
 cat > /etc/systemd/system/${app_name}.service << SERVICE_CONFIG
