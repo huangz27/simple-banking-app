@@ -4,6 +4,11 @@ variable "aws_region" {
   default     = "ap-southeast-1"
 }
 
+variable "artifact_bucket" {
+  type = string
+}
+
+
 variable "vpc_cidr" {
   description = "CIDR block for the VPC"
   type        = string

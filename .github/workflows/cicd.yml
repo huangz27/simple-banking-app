@@ -32,6 +32,23 @@ jobs:
       - name: WhoAmI (verify role assumption)
         run: aws sts get-caller-identity
         
+
+      # --- Terraform Phase 1: Bootstrap Artifacts Bucket ---
+      - name: Init Bootstrap Terraform
+        run: terraform init
+        working-directory: ./terraform/bootstrap
+
+      - name: Apply Bootstrap Terraform
+        run: terraform apply -auto-approve -input=false
+        working-directory: ./terraform/bootstrap
+
+      - name: Get bucket name
+        id: get_bucket
+        run: |
+          BUCKET_NAME=$(terraform output -raw artifact_bucket_name)
+          echo "bucket_name=$BUCKET_NAME" >> "$GITHUB_OUTPUT"
+        working-directory: ./terraform/bootstrap
+
       # --- Build Frontend (React) ---
       - name: Install dependencies for frontend
         run: npm install
@@ -44,10 +61,14 @@ jobs:
       - name: Zip frontend build
         run: zip -r frontend.zip build
         working-directory: ./frontend
+      
+      - name: Upload frontend.zip to S3
+        r run: aws s3 cp frontend.zip s3://${{ steps.get_bucket.outputs.bucket_name }}/frontend.zip
+        working-directory: ./frontend
 
         # --- Build Backend (Node.js) NOT DONE---
 
-      # --- Terraform ---
+      # --- Terraform Phase 2: Main Application Infrastructure ---
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
@@ -55,17 +76,17 @@ jobs:
 
       - name: Terraform Init
         run: terraform init
-        working-directory: ./terraform  # Change to your Terraform directory if needed
+        working-directory: ./terraform/main # Change to your Terraform directory if needed
 
       - name: Terraform Validate
         run: terraform validate
-        working-directory: ./terraform
+        working-directory: ./terraform/main
 
       - name: Terraform Plan
         run: terraform plan -out=tfplan
-        working-directory: ./terraform
+        working-directory: ./terraform/main
 
       - name: Terraform Apply (main branch only)
         if: github.ref == 'refs/heads/main'
         run: terraform apply -auto-approve tfplan
-        working-directory: ./terraform
+        working-directory: ./terraform/main
