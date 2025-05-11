@@ -131,7 +131,7 @@ data "template_file" "user_data" {
 # Launch template for ASG
 resource "aws_launch_template" "app_launch_template" {
   name_prefix   = "${var.app_name}-"
-  image_id      = data.aws_ami.amazon_linux_2.id # Dynamically fetch latest Amazon Linux 2 AMI
+  image_id      = "${var.ami_id}"
   instance_type = var.instance_type
   
   iam_instance_profile {

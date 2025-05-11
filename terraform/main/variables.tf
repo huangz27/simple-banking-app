@@ -88,14 +88,9 @@ variable "desired_capacity" {
   default     = 2
 }
 
-variable "ami_owner" {
-  description = "Owner of the AMI to use for EC2 instances"
+variable "ami_id" {
+  description = "Linux 2023 stable AMI ID"
   type        = string
-  default     = "amazon"
+  default     = "ami-0e8ebb0ab254bb563"
 }
 
-variable "ami_name_pattern" {
-  description = "Name pattern for the AMI to use for EC2 instances"
-  type        = string
-  default     = "al2023-ami-*-kernel-6.1-x86_64"
-}

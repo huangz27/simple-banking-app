@@ -346,7 +346,7 @@ resource "aws_ssm_parameter" "cloudwatch_agent_config" {
       },
       append_dimensions = {
         AutoScalingGroupName = "${aws_autoscaling_group.app_asg.name}"
-        ImageId              = "${data.aws_ami.amazon_linux_2.id}"
+        ImageId              = "${var.ami_id}"
         InstanceId           = "${aws_launch_template.app_launch_template.id}"
         InstanceType         = "${var.instance_type}"
       }
