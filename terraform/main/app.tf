@@ -118,15 +118,15 @@ resource "aws_iam_role_policy_attachment" "s3_policy_attachment" {
 #-------------------------------------------------------
 
 # Read user data script from file and render with variables
-data "template_file" "user_data" {
-  template = file("${path.module}/scripts/user-data.sh")
-  
-  vars = {
-    app_name     = var.app_name
-    aws_region   = var.aws_region
-    s3_bucket_id = var.artifact_bucket
-  }
-}
+# data "template_file" "user_data" {
+#  template = file("${path.module}/scripts/user-data.sh")
+#  
+#  vars = {
+#    app_name     = var.app_name
+#    aws_region   = var.aws_region
+#    s3_bucket_id = var.artifact_bucket
+#  }
+# }
 
 # Launch template for ASG
 resource "aws_launch_template" "app_launch_template" {
