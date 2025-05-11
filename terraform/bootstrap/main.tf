@@ -1,5 +1,5 @@
 provider "aws" {
-  region = "ap-southeast-1"
+  region = var.aws_region
 }
 
 # S3 bucket for application files
