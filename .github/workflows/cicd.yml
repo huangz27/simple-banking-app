@@ -39,17 +39,17 @@ jobs:
 
       - name: Terraform Init
         run: terraform init
-        working-directory: ./terrafrom  # Change to your Terraform directory if needed
+        working-directory: /terrafrom  # Change to your Terraform directory if needed
 
       - name: Terraform Validate
         run: terraform validate
-        working-directory: ./terrafrom
+        working-directory: /terrafrom
 
       - name: Terraform Plan
         run: terraform plan -out=tfplan
-        working-directory: ./terrafrom
+        working-directory: /terrafrom
 
       - name: Terraform Apply (main branch only)
         if: github.ref == 'refs/heads/main'
         run: terraform apply -auto-approve tfplan
-        working-directory: ./terrafrom
+        working-directory: /terrafrom
