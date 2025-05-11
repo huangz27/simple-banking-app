@@ -74,9 +74,14 @@ jobs:
         # --- Build Backend (Node.js) NOT DONE---
 
       # --- Terraform Phase 2: Main Application Infrastructure ---
-      - name: Terraform Init
-        run: terraform init
+      - name: Terraform Init with backend config
+        run: |
+          terraform init \
+            -backend-config="bucket=${{ steps.get_bucket.outputs.bucket_name }}" \
+            -backend-config="key=main/terraform.tfstate" \
+            -backend-config="region=${{ env.AWS_REGION }}"
         working-directory: ./terraform/main
+
 
       - name: Terraform Validate
         run: terraform validate
