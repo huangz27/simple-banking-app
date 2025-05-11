@@ -4,7 +4,7 @@ provider "aws" {
 
 # Use terraform state to track the bucket name
 resource "terraform_data" "bucket_name" {
-  input = "${var.artifact_bucket_name}
+  input = "${var.artifact_bucket_name}"
 }
 
 # S3 bucket for application files
