@@ -211,10 +211,6 @@ if [ -f "/tmp/backend.zip" ]; then
     unzip -o /tmp/backend.zip -d /opt/banking-app
     rm -rf /tmp/backend.zip
     
-    # Install backend dependencies
-    cd /opt/banking-app
-    npm install
-    npm run start
 fi
 
 # ====================================================================================
@@ -240,6 +236,7 @@ StandardError=syslog
 SyslogIdentifier=${app_name}
 Environment=NODE_ENV=production
 Environment=PORT=3000
+Environment=SECRETS_MANAGER_NAME=${secrets_manager_name}
 
 [Install]
 WantedBy=multi-user.target

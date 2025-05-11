@@ -125,6 +125,7 @@ data "template_file" "user_data" {
     app_name     = var.app_name
     aws_region   = var.aws_region
     s3_bucket_id = var.artifact_bucket
+    secrets_name = "${var.app_name}-pgsql-credentials-${random_id.suffix.hex}"
   }
 }
 
