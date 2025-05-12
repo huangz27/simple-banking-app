@@ -27,6 +27,7 @@ resource "aws_security_group" "db_sg" {
 resource "aws_db_instance" "banking_db" {
   allocated_storage      = 20
   storage_type           = "gp2"
+  identifier             = "banking-db"
   engine                 = "postgres"
   engine_version         = "16.9"
   instance_class         = var.db_instance_class
@@ -50,7 +51,7 @@ resource "aws_db_instance" "banking_db" {
   maintenance_window      = "Mon:00:00-Mon:03:00"
   
   # Enable deletion protection in production
-  deletion_protection = true
+  # deletion_protection = true
 
   tags = {
     Name = "banking-db"
