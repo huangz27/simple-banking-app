@@ -204,6 +204,23 @@ resource "aws_autoscaling_group" "app_asg" {
     "GroupTerminatingInstances",
     "GroupTotalInstances"
   ]
+
+  # Add instance refresh strategy for rolling updates
+  instance_refresh {
+    strategy = "Rolling"
+    preferences {
+      min_healthy_percentage = 90                # Maintains 90% of your instances during the refresh
+      instance_warmup = 120                      # Gives new instances 2 minutes to warm up
+      checkpoint_delay = 60                      # 1 minute delay between checkpoints
+      checkpoint_percentages = [25, 50, 75, 100] # Gradual deployment with checkpoints at 25%, 50%, 75%, and 100%
+      auto_rollback = true                       # Automatically rollback on failure
+    }
+    triggers = ["tag", "launch_template"]
+  }
+  
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 # Auto Scaling Policies
