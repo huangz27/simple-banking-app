@@ -52,7 +52,7 @@ resource "aws_cloudwatch_dashboard" "main" {
         height = 6
         properties = {
           metrics = [
-            ["AWS/RDS", "CPUUtilization", "DBInstanceIdentifier", aws_db_instance.banking_db.id]
+            ["AWS/RDS", "CPUUtilization", "DBInstanceIdentifier", aws_db_instance.banking_db.identifier]
           ]
           period = 300
           stat   = "Average"
@@ -100,7 +100,7 @@ resource "aws_cloudwatch_dashboard" "main" {
         height = 6
         properties = {
           metrics = [
-            ["AWS/RDS", "DatabaseConnections", "DBInstanceIdentifier", aws_db_instance.banking_db.id]
+            ["AWS/RDS", "DatabaseConnections", "DBInstanceIdentifier", aws_db_instance.banking_db.identifier]
           ]
           period = 300
           stat   = "Average"
@@ -116,7 +116,7 @@ resource "aws_cloudwatch_dashboard" "main" {
         height = 6
         properties = {
           metrics = [
-            ["AWS/RDS", "FreeStorageSpace", "DBInstanceIdentifier", aws_db_instance.banking_db.id]
+            ["AWS/RDS", "FreeStorageSpace", "DBInstanceIdentifier", aws_db_instance.banking_db.identifier]
           ]
           period = 300
           stat   = "Average"
@@ -132,8 +132,8 @@ resource "aws_cloudwatch_dashboard" "main" {
         height = 6
         properties = {
           metrics = [
-            ["AWS/RDS", "ReadIOPS", "DBInstanceIdentifier", aws_db_instance.banking_db.id],
-            ["AWS/RDS", "WriteIOPS", "DBInstanceIdentifier", aws_db_instance.banking_db.id]
+            ["AWS/RDS", "ReadIOPS", "DBInstanceIdentifier", aws_db_instance.banking_db.identifier],
+            ["AWS/RDS", "WriteIOPS", "DBInstanceIdentifier", aws_db_instance.banking_db.identifier]
           ]
           period = 300
           stat   = "Average"
@@ -149,8 +149,8 @@ resource "aws_cloudwatch_dashboard" "main" {
         height = 6
         properties = {
           metrics = [
-            ["AWS/RDS", "ReadLatency", "DBInstanceIdentifier", aws_db_instance.banking_db.id],
-            ["AWS/RDS", "WriteLatency", "DBInstanceIdentifier", aws_db_instance.banking_db.id]
+            ["AWS/RDS", "ReadLatency", "DBInstanceIdentifier", aws_db_instance.banking_db.identifier],
+            ["AWS/RDS", "WriteLatency", "DBInstanceIdentifier", aws_db_instance.banking_db.identifier]
           ]
           period = 300
           stat   = "Average"
@@ -191,7 +191,7 @@ resource "aws_cloudwatch_metric_alarm" "rds_cpu_alarm_high" {
   alarm_description   = "This metric monitors rds cpu utilization"
   alarm_actions       = [aws_sns_topic.alerts.arn]
   dimensions = {
-    DBInstanceIdentifier = aws_db_instance.banking_db.id
+    DBInstanceIdentifier = aws_db_instance.banking_db.identifier
   }
 }
 
@@ -224,7 +224,7 @@ resource "aws_cloudwatch_metric_alarm" "rds_free_storage_space_low" {
   alarm_description   = "This metric monitors PostgreSQL free storage space"
   alarm_actions       = [aws_sns_topic.alerts.arn]
   dimensions = {
-    DBInstanceIdentifier = aws_db_instance.banking_db.id
+    DBInstanceIdentifier = aws_db_instance.banking_db.identifier
   }
 }
 
@@ -240,7 +240,7 @@ resource "aws_cloudwatch_metric_alarm" "rds_high_connections" {
   alarm_description   = "This metric monitors PostgreSQL connection count"
   alarm_actions       = [aws_sns_topic.alerts.arn]
   dimensions = {
-    DBInstanceIdentifier = aws_db_instance.banking_db.id
+    DBInstanceIdentifier = aws_db_instance.banking_db.identifier
   }
 }
 
