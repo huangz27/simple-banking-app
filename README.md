@@ -1,20 +1,21 @@
-# Simple Banking App with terraform and github actions CI/CD
+# Simple Banking App with Terraform and Github Actions for CI/CD
 
 This repository contains Terraform code and application code to deploy a simple banking application on AWS. It features a Node.js backend, PostgreSQL database, and a React frontend. CI/CD is handled by GitHub Actions using temporary credentials via OpenID Connect (OIDC) for secure access to AWS to deploy the application and its infrastructure.
 
-## Architecture Diagram
-
-The following diagram illustrates the end-to-end deployment pipeline and infrastructure architecture for a secure, scalable web application deployed on AWS using Terraform and GitHub Actions. This setup automates infrastructure provisioning and application deployment across multiple Availability Zones (AZs) within a Virtual Private Cloud (VPC), following AWS best practices.
-
-GitHub Actions handles CI/CD workflows, using OpenID Connect (OIDC) to assume temporary AWS credentials.
-
-The pipeline bootstraps infrastructure with Terraform, stores build artifacts in Amazon S3, and deploys application workloads.
-
-The AWS environment spans three AZs with public and private subnets, an Application Load Balancer, Auto Scaling Group of EC2, PostgreSQL RDS database in HA configuration, and integrations with IAM, Secrets Manager, KMS, and CloudWatch for security and observability.
+## 📐 Architecture Diagram
 
 ![Architecture Diagram](./images/architecture.png)
 
-## Repository Structure
+The diagram illustrates the end-to-end deployment pipeline and infrastructure architecture for a secure, scalable web application deployed on AWS using Terraform and GitHub Actions. 
+
+- CI/CD is powered by GitHub Actions, which assumes temporary AWS credentials via OpenID Connect (OIDC)
+
+- The pipeline bootstraps infrastructure with Terraform, stores build artifacts in Amazon S3, and deploys application workloads. Auto Scaling Group with rolling deployment instance refresh strategy for minimal downtime deployments. 
+
+- The AWS environment spans three AZs with public and private subnets, an Application Load Balancer, Auto Scaling Group of EC2, PostgreSQL RDS database in HA configuration, and integrations with IAM, Secrets Manager, KMS, and CloudWatch for security and observability.
+
+
+## 📁  Repository Structure
 
 ```
 simple-banking-app/
@@ -48,7 +49,7 @@ simple-banking-app/
 │       └── scripts/         # EC2 instance setup scripts
 │           └── user-data.sh # EC2 instance initialization script
 ```
-## Security Features
+## 🔒 Security Features
 
 - **KMS Customer Managed Key (CMK)** for encryption of:
   - RDS database storage
@@ -57,7 +58,7 @@ simple-banking-app/
 
 - **Enhanced RDS Security**:
   - Storage encryption
-  - Leveraging on secrets manager for database credentials
+  - Credentials stored securely in AWS Secrets Manager
   - Automated backups enabled
   - Multi-AZ deployment
   - Delete protection enabled
@@ -71,7 +72,7 @@ simple-banking-app/
   - EC2 Instance profile with least privilege permissions
 
 
-## 🔐 Monitoring and Logging
+## 📊 Monitoring and Logging
 
 - **CloudWatch Dashboards** for application and infrastructure metrics
 ![Cloudwatch Dashboard](./images/cloudwatch-dashboard.png)
@@ -80,7 +81,7 @@ simple-banking-app/
 - **SNS Topics** for alerts and notifications
 - **Auto Scaling** based on CPU utilization
 
-## 🚀 CI/CD Pipeline
+## 🧪 CI/CD Pipeline
 
 - **GitHub Actions** automates:
   - Infrastructure provisioning with Terraform
@@ -89,12 +90,12 @@ simple-banking-app/
 - Rolling deployment for each new application upgrade
 
 
-## Prerequisites
+## 🔧 Prerequisites
 
 - You need to have an AWS account with IAM sufficient permissions to deploy the project
 - You also need a github account to setup CI/CD pipeline
 
-## Getting Started
+## 🚀 Getting Started
 
 1. Clone the repository
    ```
@@ -106,7 +107,7 @@ Follow [this AWS blog post](https://aws.amazon.com/blogs/security/use-iam-roles-
 
 3. Adjust the variables (if you are deploying on your own)
 
-Change artifact_bucket_name within terraform -> bootstrap -> variables.tf file
+Update artifact_bucket_name in terraform/bootstrap/variables.tf
 
 4. Deploy the application:
 
@@ -134,7 +135,7 @@ api_endpoints = {
 ```
 ![example app interface](images/app-example.png)
 
-## Important Notes
+## ⚠️ Important Notes
 
 - The RDS instance, KMS CMK key and secret manager has deletion protection enabled. To delete them, you will need to remove deletion_protection = true for RDS and prevent_destroy = true for KMS and secret manager
 
