@@ -1,112 +1,143 @@
-# Banking App Terraform Infrastructure
+# Simple Banking App with terraform and github actions CI/CD
 
-This repository contains Terraform code to deploy a secure, scalable banking application infrastructure on AWS.
+This repository contains Terraform code and application code to deploy a simple banking application on AWS. It features a Node.js backend, PostgreSQL database, and a React frontend. CI/CD is handled by GitHub Actions using temporary credentials via OpenID Connect (OIDC) for secure access to AWS to deploy the application and its infrastructure.
 
-## Architecture Overview
+## Architecture Diagram
 
-The infrastructure includes:
+The following diagram illustrates the end-to-end deployment pipeline and infrastructure architecture for a secure, scalable web application deployed on AWS using Terraform and GitHub Actions. This setup automates infrastructure provisioning and application deployment across multiple Availability Zones (AZs) within a Virtual Private Cloud (VPC), following AWS best practices.
 
-- VPC with public, private, and database subnets across multiple availability zones
-- Auto Scaling Group with EC2 instances in private subnets
-- Application Load Balancer in public subnets
-- RDS PostgreSQL database with encryption and high availability
-- Secrets Manager for secure credential management
-- KMS for encryption of sensitive data
-- CloudWatch for monitoring and logging
-- SNS for alerting
+GitHub Actions handles CI/CD workflows, using OpenID Connect (OIDC) to assume temporary AWS credentials.
 
+The pipeline bootstraps infrastructure with Terraform, stores build artifacts in Amazon S3, and deploys application workloads.
+
+The AWS environment spans three AZs with public and private subnets, an Application Load Balancer, Auto Scaling Group of EC2, PostgreSQL RDS database in HA configuration, and integrations with IAM, Secrets Manager, KMS, and CloudWatch for security and observability.
+
+![Architecture Diagram](./images/architecture.png)
+
+## Repository Structure
+
+```
+simple-banking-app/
+├── .github/                 # GitHub specific configurations
+│   └── workflows/           # GitHub Actions workflows
+│       └── cicd.yml         # CI/CD pipeline configuration
+├── backend/                 # Node.js Express API
+│   ├── server.js            # Main application server
+│   ├── init-db.js           # Database initialization script
+│   ├── package.json         # Node.js dependencies
+│   └── setup.sh             # Setup script for local development
+├── frontend/                # React frontend application
+│   ├── public/              # Static assets
+│   ├── src/                 # React source code
+│   └── package.json         # Frontend dependencies
+├── terraform/               # Infrastructure as Code
+│   ├── bootstrap/           # Initial resources (S3 bucket)
+│   │   ├── main.tf
+│   │   ├── variables.tf
+│   └── main/                # Main infrastructure
+│       ├── alb.tf           # Application Load Balancer configuration
+│       ├── app.tf           # EC2 and Auto Scaling Group configuration
+│       ├── backend.tf       # S3 backend to store the terraform state files
+│       ├── kms.tf           # KMS key for encryption
+│       ├── main.tf          # VPC and networking resources
+│       ├── monitoring.tf    # Cloudwatch log groups, alarms and Dashboard for monitoring
+│       ├── outputs.tf       # Terraform outputs
+│       ├── rds.tf           # PostgreSQL database configuration
+│       ├── secrets.tf       # AWS Secrets Manager configuration
+│       ├── variables.tf     # Input variables
+│       └── scripts/         # EC2 instance setup scripts
+│           └── user-data.sh # EC2 instance initialization script
+```
 ## Security Features
 
 - **KMS Customer Managed Key (CMK)** for encryption of:
   - RDS database storage
   - Secrets Manager secrets
   - CloudWatch logs
-  - S3 bucket objects
+
 - **Enhanced RDS Security**:
   - Storage encryption
-  - Performance Insights with encryption
-  - Enhanced monitoring
-  - Automated backups
+  - Leveraging on secrets manager for database credentials
+  - Automated backups enabled
   - Multi-AZ deployment
+  - Delete protection enabled
+
 - **Network Security**:
   - Private subnets for application and database tiers
   - Security groups with least privilege access
   - NAT Gateway for outbound internet access
-- **IAM Security**:
-  - Instance profiles with least privilege permissions
-  - Service roles with specific permissions
-- **Instance Security**:
-  - IMDSv2 required
-  - User data script for secure configuration
 
-## Monitoring and Logging
+- **IAM Security**:
+  - EC2 Instance profile with least privilege permissions
+
+
+## 🔐 Monitoring and Logging
 
 - **CloudWatch Dashboards** for application and infrastructure metrics
+![Cloudwatch Dashboard](./images/cloudwatch-dashboard.png)
 - **CloudWatch Alarms** for critical thresholds
 - **CloudWatch Logs** for application and system logs
 - **SNS Topics** for alerts and notifications
 - **Auto Scaling** based on CPU utilization
 
-## Project Structure
+## 🚀 CI/CD Pipeline
 
-```
-banking-app-terraform/
-├── main.tf              # Main infrastructure configuration
-├── variables.tf         # Variable definitions
-├── outputs.tf           # Output definitions
-├── app.tf               # Application infrastructure (EC2, ASG, etc.)
-├── alb.tf               # Application Load Balancer configuration
-├── rds.tf               # PostgreSQL database configuration
-├── secrets.tf           # Secrets Manager configuration
-├── kms.tf               # KMS key configuration
-├── monitoring.tf        # CloudWatch monitoring and logging
-├── scripts/
-│   └── user-data.sh     # EC2 instance user data script
-└── README.md            # Project documentation
-```
+- **GitHub Actions** automates:
+  - Infrastructure provisioning with Terraform
+  - Application deployment
+- **OpenID Connect (OIDC)** integration for secure, short-lived AWS credentials
+- Rolling deployment for each new application upgrade
+
 
 ## Prerequisites
 
-- AWS CLI configured with appropriate credentials
-- Terraform v1.0.0 or newer
-- An AWS account with permissions to create the resources
+- You need to have an AWS account with IAM sufficient permissions to deploy the project
+- You also need a github account to setup CI/CD pipeline
 
-## Deployment Instructions
+## Getting Started
 
-0. Build and upload the app related code and upload to S3
-1. Initialize Terraform:
+1. Clone the repository
    ```
-   terraform init
+   git clone https://github.com/huangz27/simple-banking-app.git
    ```
+2. Set up OIDC with github actions
 
-2. Review the execution plan:
-   ```
-   terraform plan
-   ```
+Follow [this AWS blog post](https://aws.amazon.com/blogs/security/use-iam-roles-to-connect-github-actions-to-actions-in-aws/) to configure IAM roles for GitHub Actions using OIDC.
 
-3. Apply the configuration:
-   ```
-   terraform apply
-   ```
+3. Adjust the variables (if you are deploying on your own)
 
-4. Confirm the changes by typing `yes` when prompted.
+Change artifact_bucket_name within terraform -> bootstrap -> variables.tf file
+
+4. Deploy the application:
+
+Push changes to the repository to trigger GitHub Actions workflows.
+
+Monitor the deployment process via the Actions tab.
 
 ## Post-Deployment Steps
 
-1. Verify that the EC2 instances are running and healthy in the ASG
-2. Test the application through the ALB endpoint
-3. Verify that logs are being sent to CloudWatch
-4. Test the SNS notifications
+1. Check the GitHub Actions output in the **Terraform Apply (`main` branch only)** step
 
-## Clean Up
+The alb_dns_name is where users can access the app frontend, api_endpoints to hit the backend APIs directly via ALB.
 
-To destroy all resources created by Terraform:
+Example:
 ```
-terraform destroy
+Outputs:
+
+alb_dns_name = "banking-app-alb-1115278767.ap-southeast-1.elb.amazonaws.com"
+api_endpoints = {
+  "balance" = "http://banking-app-alb-1115278767.ap-southeast-1.elb.amazonaws.com/api/balance/12345678"
+  "deposit" = "http://banking-app-alb-1115278767.ap-southeast-1.elb.amazonaws.com/api/deposit"
+  "transactions" = "http://banking-app-alb-1115278767.ap-southeast-1.elb.amazonaws.com/api/transactions/12345678"
+  "withdraw" = "http://banking-app-alb-1115278767.ap-southeast-1.elb.amazonaws.com/api/withdraw"
+}
 ```
+![example app interface](images/app-example.png)
 
 ## Important Notes
 
-- The RDS instance has deletion protection enabled. To delete it, you must first modify the instance to disable deletion protection.
-- KMS keys have a deletion waiting period of 30 days by default.
-- Remember to rotate the KMS key regularly for enhanced security.
+- The RDS instance, KMS CMK key and secret manager has deletion protection enabled. To delete them, you will need to remove deletion_protection = true for RDS and prevent_destroy = true for KMS and secret manager
+
+## 📄 License
+
+This project is licensed under the [MIT License](LICENSE).
