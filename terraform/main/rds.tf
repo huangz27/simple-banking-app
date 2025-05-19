@@ -30,6 +30,7 @@ resource "aws_db_instance" "banking_db" {
   engine                 = "postgres"
   engine_version         = "16.9"
   instance_class         = var.db_instance_class
+  identifier             = banking-db"
   db_name                = var.db_name
   username               = var.db_username
   password               = random_password.db_password.result
